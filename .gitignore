@@ -1,0 +1,7 @@
+eggs/
+dbs/
+items/
+*.pyc
+logs/
+nohup.out
+#*#

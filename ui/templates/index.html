@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <title></title>
+
+    <style type="text/css">
+    /* css reset */
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed, 
+    figure, figcaption, footer, header, hgroup, 
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    article, aside, details, figcaption, figure, 
+    footer, header, hgroup, menu, nav, section {
+        display: block;
+    }
+    body {
+        line-height: 1;
+    }
+    ol, ul {
+        list-style: none;
+    }
+    blockquote, q {
+        quotes: none;
+    }
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+        content: '';
+        content: none;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    /* actual css */
+    .container {
+        width: 1000px;
+        margin: 0 auto;
+    }
+
+    .column {
+        float: left;
+        width: 500px;
+        padding: 20px 0;
+    }
+
+    .column-left {
+        width: 370px;
+    }
+
+    .column-right {
+        width: 620px;
+    }
+
+    label {
+
+    }
+
+    #pagetitle {
+        text-align: center;
+        margin: 20px 0;
+        font-size: 32px;
+    }
+
+    .block {
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    table {
+        margin: 0 !important;
+    }
+
+    </style>
+    <style type="text/css">
+    <!--
+    @import url("/static/css/tables.css");
+    -->
+    </style>
+
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#filters > div').hide();
+
+        $('#campusbookinfo').click( function(){
+            $('#buyback').attr('checked', false).attr('disabled', $(this).is(':checked'));
+            $('#sales').attr('checked', false).attr('disabled', $(this).is(':checked'));
+            $('#buybackVendors input').attr('checked', false).attr('disabled', !$('#buyback').is(':checked'));
+            $('#salesVendors input').attr('checked', false).attr('disabled', !$('#salesVendors').is(':checked'));
+        });
+
+        $('#buyback').click(function(){
+            $('#buybackVendors input').attr('checked', false).attr('disabled', !$(this).is(':checked'));
+        });
+
+        $('#sales').click(function(){
+            $('#salesVendors input').attr('checked', false).attr('disabled', !$(this).is(':checked'));
+        });
+
+        $('#directory').change(function() {
+            var val = $('#directory option:selected').attr('value');
+
+            $('#filters > div').each(function() {
+                $(this).find('select, input').attr('disabled', 'disabled');
+                $(this).hide();
+            });
+
+            $('#filter_' + val).show().find('input,select').removeAttr('disabled')
+
+        });
+    });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 id="pagetitle">GENTE</h1>
+        {% if notice %}<div style="padding: 20px; font-weight: bold; color: red;">{{ notice }}</div>{% endif %}
+        <div class="column column-left">
+            <form action="/" method="post" enctype="multipart/form-data">
+                <div class="block">
+                    <select name="directory" id="directory">
+                        <option value="">-- Select directory --</option>
+                        {% for key, value in dirs.items() %}
+                        <option value="{{ key }}">{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+
+                    <div id="filters">
+                        <div id="filter_umn">
+                            <label for="filter_campus">Campus:</label>
+                            <select name="filter_campus">
+                                <option value="a" selected="">Any</option>
+                                <option value="c">Crookston</option>
+                                <option value="d">Duluth</option>
+                                <option value="m">Morris</option>
+                                <option value="r">Rochester</option>
+                                <option value="t">Twin Cities</option>
+                                <option value="o">Other</option>
+                            </select>
+
+                            <label for="filter_role">Role:</label>
+                            <select name="filter_role">
+                                <option value="any" selected="">Any</option>
+                                <option value="sta">Faculty/Staff</option>
+                                <option value="stu">Student</option>
+                                <option value="alu">Alumni</option>
+                                <option value="ret">Retired Faculty</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <label for="output">Output file (csv):</label>
+                    <input type="output" name="output" id="output"><br>
+
+                    <input type="radio" name="search_type" value="file" checked="checked">Search by File</input>
+                    <input type="radio" name="search_type" value="letters">Search by Letters</input><br>
+
+                    <label for="input">Input file (csv):</label>
+                    <input type="file" name="input" id="input"><br>
+
+                    {% for letter in alphabet %}
+                    <input id="letter_{{ letter }}" type="checkbox" name="letters" value="{{ letter }}" />
+                    <label for="letter_{{ letter }}">{{ letter }}</label>
+                    {% endfor %}
+                    <br />
+
+                    <label for="interval">Ms between queries:</label>
+                    <input type="interval" name="interval" id="interval" value="1000"><br>
+
+                    <label for="proxy">Proxy list (optional):</label>
+                    <input type="file" name="proxy" id="proxy"><br>
+
+                    <label for="output">Switch proxy server:</label>
+                    <input type="output" name="output" id="output" value="4"> searches<br> 
+                </div>
+                <div class="block">
+                    <input type="submit" name="start_now" value="Start Job NOW"> or <input type="submit" name="start_queue" value="Add job to Queue">
+                </div>
+            </form>
+        </div>
+        <div class="column column-right">
+            <table id="one-column-emphasis" summary="Queue" style="width: 100% !important;">
+               <caption><h3>Jobs</h3></caption>
+               <thead>
+                  <tr>
+                     <th scope="col" width="20%">School</th>
+                     <th scope="col">File name</th>
+                     <th scope="col">Start Time</th>
+                     <th scope="col">Status</th>
+                     <th scope="col"></th>
+                     <th scope="col">Archive</th>
+                     <th scope="col"></th>
+                  </tr>
+               </thead>
+               <tbody>
+                    {% for job in jobs %}
+                    <tr>
+                        <td>{{ job['dir_name'] }}</td>
+                        <td>{{ job['output'] }}</td>
+                        <td>{{ job['start_time'] }}</td>
+                        <td>{% if job['progress'] == '100' %}DONE{% else %}{{ job['progress'] }}%{% endif %}</td>
+                        <td>{% if job['progress'] == '100' %}{% else %}<a href="/pause/{{ job['id'] }}">{% if job['paused'] %}Resume{% else %}PAUSE{% endif %}</a>{% endif %}</td>
+                        <td></td>
+                        <td>{% if job['progress'] == '100' %}<a href="/output/{{ job['output'] }}">Download</a>{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+               </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
