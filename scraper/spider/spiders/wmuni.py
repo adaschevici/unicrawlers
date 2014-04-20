@@ -13,20 +13,20 @@ from scrapy import signals
 
 class XPATHS:
 
-    DEPTS_NUM = "//div[@class='user_content']/h3"
+    DEPTS_NUM = "//div[@class='user_content']/h3/text()"
     DEPARTMENTS = "(//div[@class='user_content']/h3[%s])"
     DEPT_TABLE = "./following-sibling::table[1]"
     TABLE_LINKS = ".//tr//td[1]/a/@href"
 
     PERSON_TABLE = "//table[@class='facstaff tablespecial']"
-    PERSON_NAME = ".//tr[contains(., 'Name')]//td"
-    PERSON_DEPT = ".//tr[contains(., 'Department')]//td"
-    PERSON_TITLE = ".//tr[contains(., 'Title')]//td"
-    PERSON_LOCATION = ".//tr[contains(., 'Location')]//td"
-    PERSON_CAMPUS_BOX = ".//tr[contains(., 'Campus Box')]//td"
-    PERSON_PHONE = ".//tr[contains(., 'Phone')]//td"
-    PERSON_EMAIL = ".//tr[contains(., 'Name')]//td"
-    PERSON_WMID = ".//tr[contains(., 'WMuserid')]//td"
+    PERSON_NAME = ".//tr[contains(., 'Name')]//td/text()"
+    PERSON_DEPT = ".//tr[contains(., 'Department')]//td/text()"
+    PERSON_TITLE = ".//tr[contains(., 'Title')]//td/text()"
+    PERSON_LOCATION = ".//tr[contains(., 'Location')]//td/text()"
+    PERSON_CAMPUS_BOX = ".//tr[contains(., 'Campus Box')]//td/text()"
+    PERSON_PHONE = ".//tr[contains(., 'Phone')]//td/text()"
+    PERSON_EMAIL = ".//tr[contains(., 'Name')]//td/text()"
+    PERSON_WMID = ".//tr[contains(., 'WMuserid')]//td/text()"
 
 
 class CONSTANTS:
@@ -81,6 +81,7 @@ class WmuniSpider(StudentSpider):
         #     yield self.get_search_request(response, str(phrase))
 
     def get_search_request(self, response, phrase):
+        self.log('>>>>>>>>>>>>>>>>>>%s>>>>>>>>>>>>>>>>>>>>>' % phrase)
         return FormRequest(
             url='http://directory.wm.edu/people/namelisting.cfm',
             formdata={
@@ -98,17 +99,18 @@ class WmuniSpider(StudentSpider):
         self.log('Reached line 98')
         self.log('>>>>>>>>>>>>>>>>>>%s>>>>>>>>>>>>>>>>>>>>>' % dept_no)
         for dept in xrange(dept_no):
-            self.log(XPATHS.DEPARTMENTS % (dept_no + 1))
-            dept_tbl = selector.xpath(XPATHS.DEPARTMENTS % (dept_no + 1))
+            self.log(XPATHS.DEPARTMENTS % (dept + 1))
+            dept_tbl = selector.xpath(XPATHS.DEPARTMENTS % (dept + 1))
             try:
                 meta['department'] = dept_tbl.extract()[0]
             except IndexError:
                 self.log(dept_tbl.extract()+['>>>>>>>>>>>>>>>>>>>>'])
-            dept_table = selector.xpath(XPATHS.DEPT_TABLE).extract()
+            dept_table = dept_tbl.xpath(XPATHS.DEPT_TABLE)
             self.log('Reached line 106')
             for dept_tbl_sect in dept_table:
                 self.log('Reached line 107')
-                table_links = dept_tbl_sect.xpath(XPATHS.TABLE_LINKS).extract()[1:]
+                table_links = dept_tbl_sect.xpath(XPATHS.TABLE_LINKS).extract()
+                self.log('****************%s********************' % len(table_links))
                 for link in table_links:
                     self.log(link)
                     yield Request(
@@ -124,17 +126,16 @@ class WmuniSpider(StudentSpider):
         department = response.meta.get('department', '')
         selector = Selector(response)
         name = lget(selector.xpath(XPATHS.PERSON_NAME).extract(), 0, '')
-        email = lget(selector.xpath(XPATHS.PERSON_EMAIL), 0, '')
-        title = lget(selector.xpath(XPATHS.PERSON_TITLE), 0, '')
-        wmid = lget(selector.xpath(XPATHS.PERSON_WMID), 0, '')
+        email = lget(selector.xpath(XPATHS.PERSON_EMAIL).extract(), 0, '')
+        title = lget(selector.xpath(XPATHS.PERSON_TITLE).extract(), 0, '')
+        # wmid = lget(selector.xpath(XPATHS.PERSON_WMID), 0, '')
         dept = department
-        location = lget(selector.xpath(XPATHS.PERSON_LOCATION), 0, '')
-        phone_num = lget(selector.xpath(XPATHS.PERSON_PHONE), 0, '')
+        location = lget(selector.xpath(XPATHS.PERSON_LOCATION).extract(), 0, '')
+        phone_num = lget(selector.xpath(XPATHS.PERSON_PHONE).extract(), 0, '')
         yield StudentItem(
             name=name,
             email=email,
-            title=title,
-            uid=wmid,
+            degree=title,
             department=dept,
             phone=phone_num,
             address=location
