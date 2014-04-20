@@ -25,17 +25,20 @@ app.config['OUTPUT_FOLDER'] = outdir
 app.config['JOBDIR_FOLDER'] = jobdir
 
 DIRECTORIES = OrderedDict(sorted({
+    "wmuni": "College of William and Mary",
+    "gatech": "Georgia Institute of Technology",
+    "uindy": "University of Indianapolis",
     "cmich": "Central Michigan University",
     "uoni": "University of Northern Iowa",
     "wfu": "Wake Forest University",
-    "uncc": "UNC Charlotte",
+    "uncc": "University of North Carolina Charlotte",
     "uoa": "University of Arizona",
     "uky": "University of Kentucky",
     "uok": "University of Kansas",
     "uoi": "University of Iowa",
     "unl": "University of Nebraska-Lincoln",
     "ust": "University of St. Thomas",
-    "colorado": "University of Colorado",
+    "colorado": "University of Colorado Boulder",
     "uark": "University of Arkansas",
     "umn": "University of Minnesota",
 }.items(), key=itemgetter(1)))
