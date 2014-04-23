@@ -9,6 +9,7 @@ from scrapy.http import Request
 from spider.spiders.basic import StudentSpider
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
+from scrapy.utils.markup import replace_tags
 
 
 class XPATHS:
@@ -102,7 +103,7 @@ class WmuniSpider(StudentSpider):
             self.log(XPATHS.DEPARTMENTS % (dept + 1))
             dept_tbl = selector.xpath(XPATHS.DEPARTMENTS % (dept + 1))
             try:
-                meta['department'] = dept_tbl.extract()[0]
+                meta['department'] = replace_tags(dept_tbl.extract()[0])
             except IndexError:
                 self.log(dept_tbl.extract()+['>>>>>>>>>>>>>>>>>>>>'])
             dept_table = dept_tbl.xpath(XPATHS.DEPT_TABLE)
