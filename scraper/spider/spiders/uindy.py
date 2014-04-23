@@ -52,8 +52,8 @@ class UindySpider(StudentSpider):
         students = sel.xpath(XPATHS.STUDENT_SECTION)
         for student in students:
             name = student.xpath(XPATHS.NAME)[0].extract()
-            part1 = student.xpath(XPATHS.DEGREE % 1)[0].extract()
-            part2 = student.xpath(XPATHS.DEGREE % 2)[0].extract()
+            part1 = lget(student.xpath(XPATHS.DEGREE % 1).extract(), 0, '')
+            part2 = lget(student.xpath(XPATHS.DEGREE % 2).extract(), 0, '')
             degree = part1 + part2
             degree = ' '.join(degree)
             email = student.xpath(XPATHS.EMAIL)[0].extract()
