@@ -30,7 +30,7 @@ class UncgSpider(StudentSpider):
 
     def __init__(self, *args, **kwargs):
         super(UncgSpider, self).__init__(*args, **kwargs)
-        self.filter_role = kwargs.get('filter_role2', 'B')
+        self.filter_role = kwargs.get('filter_role', 'B')
         dispatcher.connect(self.idle, signals.spider_idle)
 
     def idle(self, spider):
