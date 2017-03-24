@@ -1,5 +1,3 @@
-gente
-=====
 
 Upgraded to version 0.22 scrapy.
 
