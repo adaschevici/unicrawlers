@@ -25,6 +25,14 @@ app.config['OUTPUT_FOLDER'] = outdir
 app.config['JOBDIR_FOLDER'] = jobdir
 
 DIRECTORIES = OrderedDict(sorted({
+    # "mnsu": "Minnesota State University Mankato",
+    "iu": "Indiana University",
+    "radu": "Radford University",
+    "siuc": "Southern Illinois University Carbondale",
+    "osu": "Oklahoma State University",
+    # "wsu": "Washington State University",
+    "tulane": "Tulane University",
+    "wustl": "Washington University in St. Louis",
     "jmu": "James Madison University",
     "odu": "Old Dominion University",
     "uncg": "University of North Carolina at Greensboro",
@@ -58,13 +66,17 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def schedule_spider(data):
+    filter_1 = data.get('filter_role', '')
+    filter_2 = data.get('filter_campus', '')
     return requests.post("http://localhost:6800/schedule.json", data={
-        'project': 'spider', 
-        'spider': data['directory'], 
-        'letters': data['letters'], 
+        'project': 'spider',
+        'spider': data['directory'],
+        'letters': data['letters'],
         'search_type': data['search_type'],
         'output_file': data['output'],
         'input_file': data['input'],
+        'filter_role': filter_1,
+        'filter_campus': filter_2,
         'setting': 'JOBDIR=%s' % os.path.join(app.config['JOBDIR_FOLDER'], data['jobdir_id'])
     }).json()
 

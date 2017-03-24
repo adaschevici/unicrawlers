@@ -11,6 +11,8 @@ from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 from scrapy.utils.markup import replace_tags
 
+from spider.utils import Sanitizer
+
 class XPATHS:
 
     STUDENTS_TABLE = "//table[@summary='Search Results']//tr"
@@ -31,6 +33,7 @@ class UncgSpider(StudentSpider):
     def __init__(self, *args, **kwargs):
         super(UncgSpider, self).__init__(*args, **kwargs)
         self.filter_role = kwargs.get('filter_role', 'B')
+        print '*' * 10, self.filter_role, '*' * 10
         dispatcher.connect(self.idle, signals.spider_idle)
 
     def idle(self, spider):
@@ -64,32 +67,25 @@ class UncgSpider(StudentSpider):
             return x[index] if len(x) > index else default
         sel = Selector(response)
         next = sel.xpath(XPATHS.NEXT_PAGE).extract()
-        while next:
-            people_links = sel.xpath(XPATHS.STUDENTS_TABLE)[1:]
-            for person in people_links:
-                email = lget(person.xpath(XPATHS.EMAIL).extract(), 0, '')
-                name = replace_tags(lget(person.xpath(XPATHS.NAME).extract(), 0, '')).split('--')[0]
-                address = replace_tags(lget(person.xpath(XPATHS.ADDRESS).extract(), 0, ''))
-                status = lget(person.xpath(XPATHS.STATUS).extract(), 0, '')
-                yield StudentItem(
-                    name=name,
-                    email=email,
-                    address=address,
-                    degree=status
-                )
+        self.state['progress_current'] += 1
+        people_links = sel.xpath(XPATHS.STUDENTS_TABLE)[1:]
+        for person in people_links:
+            email = lget(person.xpath(XPATHS.EMAIL).extract(), 0, '')
+            email = Sanitizer.trim(email)
+            name = replace_tags(lget(person.xpath(XPATHS.NAME).extract(), 0, '')).split('--')[0]
+            name = Sanitizer.trim(name)
+            address = replace_tags(lget(person.xpath(XPATHS.ADDRESS).extract(), 0, ''))
+            address = Sanitizer.trim(address)
+            status = lget(person.xpath(XPATHS.STATUS).extract(), 0, '')
+            status = Sanitizer.trim(status)
+            yield StudentItem(
+                name=name,
+                email=email,
+                address=address,
+                degree=status
+            )
+        if next:
             yield Request(
                 url=CONSTANTS.BASE_URL + next[0],
                 callback=self.people
             )
-        people_links = sel.xpath(XPATHS.STUDENTS_TABLE)[1:]
-        for person in people_links:
-                email = lget(person.xpath(XPATHS.EMAIL).extract(), 0, '')
-                name = replace_tags(lget(person.xpath(XPATHS.NAME).extract(), 0, '')).split('--')[0]
-                address = replace_tags(lget(person.xpath(XPATHS.ADDRESS).extract(), 0, ''))
-                status = lget(person.xpath(XPATHS.STATUS).extract(), 0, '')
-                yield StudentItem(
-                    name=name,
-                    email=email,
-                    address=address,
-                    degree=status
-                )

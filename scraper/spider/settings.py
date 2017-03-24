@@ -7,7 +7,7 @@
 #
 
 BOT_NAME = 'spider'
-
+REDIRECT_ENABLED = True
 SPIDER_MODULES = ['spider.spiders']
 NEWSPIDER_MODULE = 'spider.spiders'
 

@@ -58,7 +58,7 @@ class ColoradoSpider(StudentSpider):
             email = lget(meta.xpath('.//div[@class="people-data"]/a[@class="email-long"]/text()').extract(), 0, '').lower()
             phone = lget(meta.xpath('.//div[@class="people-data"]/text()').extract(), 1, '')[3:]
             address = meta.xpath('.//div[@class="people-address"]/text()').extract()
-            
+
             if address and len(address) == 2:
                 address = '%s (box: %s)' % (address[1].strip(), address[0].strip()[2:],)
             else:

@@ -1,5 +1,5 @@
 import cgi, urllib, urlparse
-
+import re
 # helper class for modifying urls
 # source: http://stackoverflow.com/a/2878051/250162
 class Url(object):
@@ -27,3 +27,28 @@ class Utf8(object):
     def __str__(self):
         """Convert page to str"""
         return str(self.page)
+
+
+class Sanitizer(object):
+
+    exclusions = ['\t', '\xa0', '"']
+    replacements = ['\r\n']
+
+    @classmethod
+    def trim(cls, data):
+        try:
+            for exc in cls.exclusions:
+                data = re.sub(exc, '', data, flags=re.UNICODE)
+            for exc in cls.replacements:
+                data = re.sub(exc, ' ', data, flags=re.UNICODE)
+            data = data.strip()
+        except:
+            pass
+        return data or 'N/A'
+
+if __name__ == '__main__':
+    test = ' \t \t \t \t caca'
+    data = None
+    print test
+    print Sanitizer.trim(test)
+    print data or 'none'

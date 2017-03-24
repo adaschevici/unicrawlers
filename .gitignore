@@ -1,3 +1,6 @@
+.idea
+scraper/build/
+scraper/project.egg-info/
 eggs/
 dbs/
 items/

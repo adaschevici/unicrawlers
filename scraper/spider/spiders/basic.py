@@ -9,6 +9,7 @@ from scrapy import log
 from urllib import urlencode
 from spider.items import StudentItem
 from scrapy.http import FormRequest
+from spider.utils import Sanitizer
 
 from string import ascii_lowercase
 from itertools import product
@@ -74,9 +75,9 @@ class StudentSpider(BaseSpider):
 
             for word in words:
                 for letter in alphabet:
-                    phrases.append('%c %s' % (letter, word,))
+                    phrases.append(('%c' % letter, '%s' % Sanitizer.trim(word)))
 
-            print phrases
+            # print phrases
             return phrases
 
     def get_progress(self):

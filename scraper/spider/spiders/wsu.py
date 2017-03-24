@@ -31,7 +31,6 @@ class WsuSpider(StudentSpider):
         phrases = ['ab']
 
         for phrase in phrases:
-            print phrase
             yield self.get_search_request(response, str(phrase))
 
     def get_search_request(self, response, phrase):
@@ -45,5 +44,5 @@ class WsuSpider(StudentSpider):
 
         p = re.compile('<strong>(.+?)</strong></td></tr><tr><td>(.+?)</td>.*?mailto:(.+?)"')
         students = p.findall(response.body)
-
+        print response.url
         print students

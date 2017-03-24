@@ -30,6 +30,8 @@ class OduSpider(StudentSpider):
     def __init__(self, *args, **kwargs):
         super(OduSpider, self).__init__(*args, **kwargs)
         self.filter_role = kwargs.get('filter_role', 'A')
+        print kwargs
+        print '*' * 10, self.filter_role, '*' * 10
         dispatcher.connect(self.idle, signals.spider_idle)
 
     def idle(self, spider):
@@ -59,6 +61,7 @@ class OduSpider(StudentSpider):
         sel = Selector(response)
         people_tbl = sel.xpath(XPATHS.STUDENTS_TABLE)
         for person in people_tbl:
+            self.state['progress_current'] += 1
             name = replace_tags(lget(person.xpath(XPATHS.NAME).extract(), 0, ''))
             email = lget(person.xpath(XPATHS.EMAIL).extract(), 0, '')
             dept = replace_tags(lget(person.xpath(XPATHS.DEPARTMENT).extract(), 0, ''))

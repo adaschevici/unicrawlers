@@ -50,6 +50,7 @@ class JmuSpider(StudentSpider):
     def people(self, response):
         def lget(x, index, default):
             return x[index] if len(x) > index else default
+        self.state['progress_current'] += 1
         sel = Selector(response)
         people_table = sel.xpath(XPATHS.STUDENTS_TABLE)
         for person in people_table:

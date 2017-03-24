@@ -6,94 +6,9 @@
     <title></title>
 
     <style type="text/css">
-    /* css reset */
-    html, body, div, span, applet, object, iframe,
-    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-    a, abbr, acronym, address, big, cite, code,
-    del, dfn, em, img, ins, kbd, q, s, samp,
-    small, strike, strong, sub, sup, tt, var,
-    b, u, i, center,
-    dl, dt, dd, ol, ul, li,
-    fieldset, form, label, legend,
-    table, caption, tbody, tfoot, thead, tr, th, td,
-    article, aside, canvas, details, embed, 
-    figure, figcaption, footer, header, hgroup, 
-    menu, nav, output, ruby, section, summary,
-    time, mark, audio, video {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        font-size: 100%;
-        font: inherit;
-        vertical-align: baseline;
-    }
-    /* HTML5 display-role reset for older browsers */
-    article, aside, details, figcaption, figure, 
-    footer, header, hgroup, menu, nav, section {
-        display: block;
-    }
-    body {
-        line-height: 1;
-    }
-    ol, ul {
-        list-style: none;
-    }
-    blockquote, q {
-        quotes: none;
-    }
-    blockquote:before, blockquote:after,
-    q:before, q:after {
-        content: '';
-        content: none;
-    }
-    table {
-        border-collapse: collapse;
-        border-spacing: 0;
-    }
-
-    /* actual css */
-    .container {
-        width: 1000px;
-        margin: 0 auto;
-    }
-
-    .column {
-        float: left;
-        width: 500px;
-        padding: 20px 0;
-    }
-
-    .column-left {
-        width: 370px;
-    }
-
-    .column-right {
-        width: 620px;
-    }
-
-    label {
-
-    }
-
-    #pagetitle {
-        text-align: center;
-        margin: 20px 0;
-        font-size: 32px;
-    }
-
-    .block {
-        margin-bottom: 20px;
-    }
-
-    h3 {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    table {
-        margin: 0 !important;
-    }
-
+    <!--
+    @import url("/static/css/somestyle.css");
+    -->
     </style>
     <style type="text/css">
     <!--
@@ -137,7 +52,6 @@
 </head>
 <body>
     <div class="container">
-        <h1 id="pagetitle">GENTE</h1>
         {% if notice %}<div style="padding: 20px; font-weight: bold; color: red;">{{ notice }}</div>{% endif %}
         <div class="column column-left">
             <form action="/" method="post" enctype="multipart/form-data">
@@ -186,6 +100,54 @@
                                 <option value="A" selected="">Any</option>
                                 <option value="E">Faculty/Staff</option>
                                 <option value="S">Student</option>
+                            </select>
+                        </div>
+                        <div id="filter_osu">
+                            <label for="filter_campus">Campus:</label>
+                            <select name="filter_campus">
+                                <option value="AM" selected="">A & M System</option>
+                                <option value="SYSTEMS">OSU System</option>
+                                <option value="OSU Center for Health Sciences">OSU - CHS</option>
+                                <option value="OSU Oklahoma City">OSU - Oklahoma City</option>
+                                <option value="OSU-Institute of Technology">OSU - Institute of Technology</option>
+                                <option value="OSU Stillwater">OSU - Stillwater/NOC</option>
+                                <option value="OSU Tulsa">OSU - Tulsa</option>
+                                <option value="Connors State College, Warner">Connors State College</option>
+                                <option value="Langston University, Langston">Langston University</option>
+                                <option value="Northeastern Oklahoma A & M, Miami">Northeastern Oklahoma A & M</option>
+                                <option value="Panhandle State University, Goodwell">Panhandle State University</option>
+                                <option value="Northern Oklahoma College, Stillwater">Northern Oklahoma College</option>
+                            </select>
+                        </div>
+                        <div id="filter_siuc">
+                            <label for="filter_role">Role:</label>
+                            <select name="filter_role">
+                                <option value="people" selected="">All People</option>
+                                <option value="employee">Faculty/Staff</option>
+                                <option value="student">Student</option>
+                                <option value="orgunit">Departments, Offices, or Units</option>
+                            </select>
+                        </div>
+                        <div id="filter_iu">
+                            <label for="filter_role">Status:</label>
+                            <select name="filter_role">
+                                <option value="Any" selected="">All People</option>
+                                <option value="Faculty">Faculty/Staff</option>
+                                <option value="Student">Student</option>
+                                <option value="Empolyee">Employee</option>
+                            </select>
+                            <label for="filter_role">Status:</label>
+                            <select name="filter_campus">
+                                <option value="Any" selected="">All People</option>
+                                <option value="bloomington">Bloomington</option>
+                                <option value="iupui">Indianapolis</option>
+                                <option value="columbus">Columbus</option>
+                                <option value="fort wayne">Fort Wayne</option>
+                                <option value="northwest">Gary (Northwest)</option>
+                                <option value="kokomo">Kokomo</option>
+                                <option value="southeast">New Albany (Southeast)</option>
+                                <option value="east">New Albany (Southeast)</option>
+                                <option value="south bend">South Bend</option>
                             </select>
                         </div>
                     </div>

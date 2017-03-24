@@ -44,7 +44,7 @@ class CmichSpider(StudentSpider):
         students = sel.xpath('//td[@class="cmuDirResultsInfo"]')
 
         self.state['progress_current'] += 1
-        
+
         for student in students:
             yield StudentItem(
                 name=student.xpath('.//div[@class="cmuDirName"]/text()').extract()[0],
