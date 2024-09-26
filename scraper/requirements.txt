@@ -1,4 +1,4 @@
 Scrapy==2.0.0
 redis==3.4.1
-requests==2.23.0
+requests==2.32.2
 scrapyd==1.2.1
